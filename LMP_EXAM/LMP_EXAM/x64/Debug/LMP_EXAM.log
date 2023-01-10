@@ -1,7 +1,0 @@
-﻿  My_List.cpp
-E:\Cici+\LMP_EXAM\LMP_EXAM\My_List.h(63,1): warning C4267: return: преобразование из "size_t" в "TInfo"; возможна потеря данных
-  Source(LIST).cpp
-E:\Cici+\LMP_EXAM\LMP_EXAM\My_List.h(63,1): warning C4267: return: преобразование из "size_t" в "TInfo"; возможна потеря данных
-E:\Cici+\LMP_EXAM\LMP_EXAM\Source(LIST).cpp(11,1): warning C4326: возвращаемый тип "main" должен быть "int", а не "void"
-  Создание кода...
-  LMP_EXAM.vcxproj -> E:\Cici+\LMP_EXAM\x64\Debug\LMP_EXAM.exe
