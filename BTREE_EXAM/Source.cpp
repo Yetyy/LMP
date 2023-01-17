@@ -543,6 +543,8 @@ TInfo task1_search_1(Tree t)
 	{
 		if (t->left)
 			result = task1_search_1(t->left);
+		else if (t->right)
+			result = task1_search_1(t->right);
 		else
 			result = t->info;
 	}
@@ -569,17 +571,22 @@ TInfo task2_search_1(Tree root)
 				q.push(t->left);
 				++countNext;
 			}
+			else if (t->right)
+			{
+				q.push(t->right);
+				++countNext;
+			}
 			else if (i == 1) // first in queue - left elem
 			{
 				flag = true;
 				result = t->info;
 			}
 
-			if (t->right && !flag)
-			{
-				q.push(t->right);
-				++countNext;
-			}
+			/*	if (t->right && !flag)
+				{
+					q.push(t->right);
+					++countNext;
+				}*/
 		}
 		count = countNext;
 	}
