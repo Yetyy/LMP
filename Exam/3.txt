@@ -1,0 +1,31 @@
+void task_1(Tree& t, int h, int count = 0)
+{
+
+	if (count > h)
+		Clear(t);
+	if (t)
+	{
+		task_1(t->left, h, count + 1);
+		task_1(t->right, h, count + 1);
+	}
+}
+void task_2(Tree& t)
+{
+	
+	
+		if (std::abs(t->info%2) == 1)
+		{
+			if(t->left)
+			Clear(t->left);
+			if (t->right)
+			Clear(t->right);
+		}
+		else
+		{
+			if (t->left)
+				task_2(t->left);
+			if (t->right)
+				task_2(t->left);
+		}
+	
+}

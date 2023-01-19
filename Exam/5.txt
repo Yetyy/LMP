@@ -1,0 +1,40 @@
+TrieTree copy(TrieTree root) {
+    if (!root) return nullptr;
+    TrieTree new_root = new NODE;
+
+    new_root->eow = root->eow;
+    for (int i = 0; i < 26; ++i) {
+        new_root->ptrs[i] = copy(root->ptrs[i]);
+        
+    }
+    if (root->eow)
+    {
+        TrieTree add_root = new NODE;
+        new_root->ptrs[0] = add_root;
+        new_root->ptrs[0]->eow = true;
+        new_root->eow = false;
+    };
+    return new_root;
+}
+TrieTree copy_2(TrieTree root) {
+    if (!root) return nullptr;
+    TrieTree new_root = new NODE;
+
+
+    for (int i = 0; i < 26; ++i) {
+        if(root->ptrs[i])
+        if (root->ptrs[i]->eow) 
+            new_root->eow=true;
+        else
+            new_root->ptrs[i] = copy_2(root->ptrs[i]);
+
+    }
+    if (root->eow)
+    {
+        TrieTree add_root = new NODE;
+        new_root->ptrs[0] = add_root;
+        new_root->ptrs[0]->eow = true;
+        new_root->eow = false;
+    };
+    return new_root;
+}

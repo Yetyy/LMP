@@ -1,0 +1,51 @@
+int task_1(Tree& t)
+{
+	int sum = 0;
+	std::queue<Tree> q;
+	q.push(t);
+	while (!q.empty())
+	{
+		Tree ptr = q.front();
+		q.pop();
+		sum += ptr->info;
+		if (ptr->info % 2 == 0)
+		{
+			if (ptr->right)
+				q.push(ptr->right);
+			if (ptr->left)
+				q.push(ptr->left);
+		}
+	}
+	return sum;
+}
+int task_2(Tree& t,int n)
+{
+	int sum = 0;
+	std::queue<Tree> q;
+	q.push(t);
+	int count = 1;
+	int level = 0;
+	while (!q.empty() && level <= n)
+	{
+		int countNext = 0;
+		for (size_t i = 0; i < count; i++)
+		{
+			Tree elem = q.front();
+			sum += elem->info;
+			q.pop();
+			if (elem->left)
+			{
+				q.push(elem->left);
+				++countNext;
+			}
+			if (elem->right)
+			{
+				q.push(elem->right);
+				++countNext;
+			}
+		}
+		++level;
+		count = countNext;
+	}
+	return sum;
+}

@@ -1,0 +1,42 @@
+void task_1(LIST& list, std::function<bool(ptrNODE&)> lambda)
+{
+	ptrNODE prelast = nullptr;
+	ptrNODE last = nullptr;
+	ptrNODE ptr = list.get_head();
+	while (ptr->next)
+	{
+		if (lambda(ptr->next))
+
+		{
+			prelast = last;
+			last = ptr;
+		}
+		ptr = ptr->next;
+	}
+	if (prelast)
+	{
+		while (prelast->next != last)
+			list.del_after(prelast);
+		list.del_after(prelast);
+		list.del_after(prelast); 
+	}
+}
+void task_2(LIST& list)
+{
+	ptrNODE ptr = list.get_head();
+	ptrNODE p_elem=nullptr;
+	while (ptr->next)
+	{
+		if (std::abs(ptr->next->info) % 3 == 0) p_elem = ptr;
+		ptr = ptr->next;
+	}
+	if (p_elem)
+	{
+		ptrNODE end=list.get_tail();
+		ptrNODE tmp = p_elem->next;
+		end->next = p_elem->next;
+		p_elem->next = p_elem->next->next;
+		list.set_tail(p_elem);
+		tmp->next = nullptr;
+	}
+ }
