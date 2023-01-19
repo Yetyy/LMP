@@ -98,7 +98,67 @@ void task_3(DLIST& list)
         //cout << p->info << ' ';
     }
 }
+void task_4(DLIST& list)
+{
+    ptrNODE p = list.get_end();
+    ptrNODE start = list.get_begin();
 
+    
+    while (p != start)
+    {
+        list.add_after(list.get_end(), p->info);
+        p = p->prev;
+    }
+    list.add_after(list.get_end(), p->info);
+}
+void task_5(DLIST& list,int k)
+{
+    ptrNODE p = list.get_begin();
+    int i = 0;
+    while (p)
+    {
+        ++i;
+        if (i == k)
+        {
+            std::cout << p->info << " ";
+                p = list.Delete(p);
+            i = 0;
+        }
+        else
+        p = p->next;
+    }
+ 
+}
+void task_6(DLIST& list, int k)
+{
+    ptrNODE p = list.get_begin();
+    ptrNODE start = list.get_begin();
+    int i = 1;
+    bool flag = false;
+    p = p->next;
+    while (p != start && !flag)
+    {
+        ++i;
+        if (p->info % 2 == 1)
+        {
+            flag = true;
+            ptrNODE tmp = p->next->prev;
+            p->prev->next = p->next;    
+            p->next->prev = p->prev;
+            if (i != k)
+                if (i < k)
+                    for (i; i < k; ++i) { p = p->next; }
+                else for(i; i > k; --i) { p = p->prev; }
+   
+            p->prev->next = tmp;
+            tmp->prev = p->prev;
+            tmp->next = p;
+            p->prev = tmp;
+            break;
+        }
+        p = p->next;
+    }
+}
 int main()
 {
     std::ifstream file("data.txt");
@@ -110,7 +170,11 @@ int main()
         //task_1(list);
         //task_2(list, 3);
         //task_3(list);
-        //list.print();
+        //task_4(list);
+        //task_5(list, 2);
+        task_6(list, 2);
+        std::cout << '\n';
+        list.print();
         //cout << list.size;
     }
 }

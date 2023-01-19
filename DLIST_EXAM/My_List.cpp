@@ -62,30 +62,7 @@ void DLIST::add_before(ptrNODE ptr, const TInfo elem)
 	ptr->next = p;
 }
 
-//template<typename T>
-//DLIST<T>::~DLIST()
-//{
-//	while (!empty())
-//		Delete(begin);
-//}
 
-//template<typename T>
-//ptrNODE<T>& DLIST<T>::del_after(ptrNODE<T>& ptr)
-//{
-//	ptrNODE tmp = ptr->next;
-//	ptr->next = tmp->next;
-//	if (!tmp->next)
-//		end = ptr;
-//	else
-//		tmp->next->prev = ptr;
-//	
-//	static ptrNODE<T> a;
-//	a = tmp->next;
-//
-//	delete tmp;
-//	size--;
-//	return a;
-//}
 
 std::string DLIST::to_string() const
 {

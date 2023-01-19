@@ -24,7 +24,7 @@ struct DLIST
 private:
 	ptrNODE begin, end;
 public:
-	size_t size;
+	size_t size=0;
 	DLIST() { begin = nullptr; end = nullptr; }
 	DLIST(std::ifstream& file);
 	void first_node(const TInfo);
@@ -47,4 +47,37 @@ public:
 	//friend std::ostream& operator <<(std::ostream& stream, const T list);
 	std::string to_string() const;
 	void print() const;
+	ptrNODE& del_after(ptrNODE& ptr)
+	{
+		ptrNODE tmp = ptr->next;
+		ptr->next = tmp->next;
+		if (!tmp->next)
+			end = ptr;
+		else
+			tmp->next->prev = ptr;
+
+		static ptrNODE a;
+		a = tmp->next;
+
+		delete tmp;
+		size--;
+		return a;
+	}
+
+	ptrNODE& del_before(ptrNODE& ptr)
+	{
+		ptrNODE tmp = ptr->prev;
+		ptr->prev = tmp->prev;
+		if (!tmp->prev)
+			begin = ptr;
+		else
+			tmp->prev->next = ptr;
+
+		static ptrNODE a;
+		a = tmp->next;
+
+		delete tmp;
+		size--;
+		return a;
+	}
 };
