@@ -1,0 +1,40 @@
+LIST
+-------------
+void NODEswap(ptrNODE p1, ptrNODE p2)
+{
+    ptrNODE p1t = p1->next;
+    p1->next = p2->next;
+    ptrNODE p2t = p2->next->next;
+    p2->next->next = p1t->next;
+    p2->next = p1t;
+    p1t->next = p2t;
+
+}
+------------
+DLIST
+------------
+void swapN(ptrNODE p1, ptrNODE p2)
+{
+    ptrNODE tmp = p1->next;
+    p1->next = p2->next;
+    p2->next = tmp;
+    if (p1->next)
+    {
+        p1->next->prev = p1;
+    }
+    if (p2->next)
+    {
+        p2->next->prev = p2;
+    }
+    tmp = p1->prev;
+    p1->prev = p2->prev;
+    p2->prev = tmp;
+    if (p1->prev)
+    {
+        p1->prev->next = p1;
+    }
+    if (p2->prev)
+    {
+        p2->prev->next = p2;
+    }
+}
