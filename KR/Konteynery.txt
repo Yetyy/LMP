@@ -1,0 +1,93 @@
+/*
+	Дан файл, содержащий несколько строк, необходимо найти номер строки, которая содержит 
+	наибольшее кол-во слов с повторяющимися буквами
+*/
+
+int countWords(std::string str) {
+	std::stringstream sstr(str);
+	std::string tmp;
+	int count = 0;
+	auto strToLow = [](std::string str) {
+		std::string result;
+		for (int i = 0; i < str.length(); ++i)
+			result += tolower(str[i]);
+		return result;
+	};
+	std::function<bool(std::string)> wordCheck = [](std::string str) {
+		std::set<char> SET;
+		bool flag = false;
+		int i = 0;
+		while (!flag && i < str.length()) {
+			if (SET.find(str[i]) != SET.end())
+				flag = true;
+			else {
+				SET.insert(str[i]);
+				++i;
+			}
+		}
+		return flag;
+	};
+	while (sstr >> tmp) {
+		tmp = strToLow(tmp);
+		if (wordCheck(tmp))
+			count++;
+	}
+	return count;
+}
+
+int task2(std::fstream& file) {
+	std::string line;
+	int count = 0, maxCount = 0, num = 0, maxNum = 0;
+	while (std::getline(file, line)) {
+		num += 1;
+		count = countWords(line);
+		if (count > maxCount) {
+			maxCount = count;
+			maxNum = num;
+		}
+	}
+	return maxNum;
+}
+
+/*
+	Распечатать все слова файла, рядом со словами перечислить номера строк, в которых встречается это слово.
+*/
+
+using TMap = std::map<std::string, std::list<int>>;
+
+void addToMap(std::string line, TMap& mp, int i) {
+	std::stringstream sstr(line);
+	std::string word;
+	while (sstr >> word) {
+		if (mp.find(word) != mp.end()) {
+			if (mp[word].back() != i)
+				mp[word].push_back(i);
+		}
+		else {
+			std::list<int> list;
+			list.push_back(i);
+			//mp.insert(make_pair(word, list));
+			mp.emplace(word, list);
+		}
+	}
+}
+
+void printMap(const TMap& mp) {
+	for (auto x : mp) {
+		std::cout << x.first << ": ";
+		for (auto y : x.second)
+			std::cout << y << ' ';
+		std::cout << '\n';
+	}
+}
+
+TMap task3(std::fstream& file) {
+	TMap mp;
+	std::string tmp;
+	int i = 0;
+	while (std::getline(file, tmp)) {
+		addToMap(tmp, mp, i);
+		++i;
+	}
+	return mp;
+}
