@@ -1,0 +1,917 @@
+#include<iostream>
+#include<Windows.h>
+
+
+void Print(int* arr, int n) 
+{ 
+	for (int i = 0; i < n; i++) 
+		std::cout << arr[i] << ' '; 
+	std::cout << std::endl; 
+}
+
+
+// Слияние arr[left..middle] с arr[middle+1..right] 
+void Merge(int* arr, int* tmp, int left, int middle, int right)
+{ 
+
+	for (int k = left; k <= right; k++) 
+		tmp[k] = arr[k];  
+
+
+	int i = left;
+
+	int j = middle + 1;
+	int k = left;
+	while (k <= right)
+		if (i > middle) 
+			arr[k++] = tmp[j++];
+		else if (j > right) 
+			arr[k++] = tmp[i++];
+		else if (tmp[i] < tmp[j])  
+			arr[k++] = tmp[i++];
+		else 
+			arr[k++] = tmp[j++];
+}
+
+
+void MergeSortUp(int* arr, int size)
+{
+	int* tmp = new int[size];
+	int length = 1;
+	int left;
+	while (length < size)
+	{
+		left = 0;
+		while (left < size - length)
+		{
+			Merge
+			(
+				arr, 
+				tmp, 
+				left, 
+				left + length - 1, 
+				min
+				(
+					left + 2 * length - 1, 
+					size - 1 
+				)
+			);
+			left += 2 * length;
+		}
+		length *= 2;
+	}
+	delete[] tmp;
+}
+		
+int main()
+{
+	const int n = 10;
+	int arr[n]; 
+	srand(GetTickCount64());
+	for (int i = 0; i < n; i++) 
+		arr[i] = rand() % 100; 
+	Print(arr, n); 
+	MergeSortUp(arr, n); 
+	Print(arr, n);
+	std::cin.get();
+	return 0;
+}
+struct TapeCell {
+	int value;
+	bool eosa; // end of sub array
+	TapeCell(int value, bool eosa) : value(value), eosa(eosa) {}
+};
+
+void natural_merge_sort(std::vector<int>& vector)
+{
+	std::vector<TapeCell> sub[2];
+	size_t n = vector.size();
+	size_t whichSub = 0;
+	bool isSorted = false;
+
+	while (!isSorted) {
+		sub[0].clear();
+		sub[1].clear();
+
+		for (int i = 0; i < n - 1; ++i) {
+			if (vector[i] <= vector[i + 1])
+				sub[whichSub].push_back(TapeCell(vector[i], 0));
+			else {
+				sub[whichSub].push_back(TapeCell(vector[i], 1));
+				whichSub = ++whichSub % 2;
+			}
+		}
+		sub[whichSub].push_back(TapeCell(vector[n - 1], 1));
+
+		isSorted = sub[0].size() == 0 || sub[1].size() == 0;
+		if (!isSorted) {
+			natural_merge(vector, sub[0], sub[1]);
+		}
+	}
+}
+
+void natural_merge(std::vector<int>& vector, std::vector<TapeCell>& a, std::vector<TapeCell>& b)
+{
+	size_t aLen = a.size(), bLen = b.size();
+	size_t i = 0, j = 0, k = 0;
+	do {
+		if (a[i].eosa && b[j].eosa) {
+			vector[k++] = a[i++].value;
+			vector[k++] = b[j++].value;
+			if (vector[k - 1] < vector[k - 2])
+				std::swap(vector[k - 1], vector[k - 2]);
+		}
+		else {
+			if (a[i].value <= b[j].value)
+				vector[k++] = a[i++].value;
+			else
+				vector[k++] = b[j++].value;
+		}
+
+	} while (i < aLen && j < bLen);
+	while (i < aLen)
+		vector[k++] = a[i++].value;
+	while (j < bLen)
+		vector[k++] = b[j++].value;
+}
+void mergeSort(int* A, int left, int right)
+{
+if (left == right) 
+{
+return;
+}
+int middle = (left + right) / 2; 
+mergeSort(A, left, middle); 
+mergeSort(A, middle + 1, right); 
+int* tmp = new int[right]; 
+int first = left; 
+int second = middle + 1; 
+for (int i = 0; i < right - left + 1; i++) 
+{
+if ((second > right) || ((first <= middle) && (A[first] < A[second])))
+{
+tmp[i] = A[first];
+first++;
+}
+else
+{
+tmp[i] = A[second];
+second++;
+}
+}
+for (int i = 0; i < right - left + 1; i++)
+{
+A[left + i] = tmp[i];
+}
+}
+#include <iostream>
+#include <Windows.h>
+
+void Merge(int*& a, int*& b, int n, int left, int middle, int right);
+void NaturalMergeSort(int*& a, int n);
+
+int main() {
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	srand(time(NULL));
+	const int n = 10;
+	int* a = new int[n];
+	std::cout << "Элементы массива до сортировки:\n";
+	for (int i = 0; i < n; ++i) {
+		a[i] = -20 + rand() % 41;
+		std::cout << a[i] << ' ';
+	}
+	std::cout << '\n';
+	std::cout << "Элементы массива после сортировки:\n";
+	NaturalMergeSort(a, n);
+	/*for (int i = 0; i < n; ++i)
+		std::cout << a[i] << ' ';*/
+	std::cin.get();
+}
+
+void Merge(int*& a, int n, int left, int middle, int right) {
+	int l = left, r = middle + 1;
+	int* b = new int[n];
+	for (int i = left; i <= right; ++i)
+		if (r > right || (l <= middle && a[l] <= a[r]))
+			b[i] = a[l++];
+		else if (l > middle || (r <= right && a[r] <= a[l]))
+			b[i] = a[r++];
+	for (int i = left; i <= right; ++i)
+		a[i] = b[i];
+	for (int i = left; i <= right; ++i)
+		std::cout << a[i] << ' ';
+	std::cout << '\n';
+}
+
+void NaturalMergeSort(int*& a, int n) {
+	int left = 0, right = n - 1;
+	bool sorted = false;
+	int l = left, r = right;
+	do {
+		sorted = true;
+		left = 0;
+		while (left < right) {
+			l = left;
+			while (l < right && a[l] <= a[l + 1])
+				++l;
+			r = l + 1;
+			while (r == right - 1 || r < right && a[r] <= a[r + 1])
+				++r;
+			if (r <= right) {
+				Merge(a, n, left, l, r);
+				sorted = false;
+			}
+			left = r + 1;
+		}
+	} while (!sorted);
+}
+void counting_sort(int* arr, int size)
+{
+	int* count = new int[size] {0};
+	int elem1, elem2;
+	for (int i = size - 1; i > 0; --i)
+	{
+		for (int j = 0; j < i; ++j)
+			if (arr[i] >= arr[j])
+				count[i] = count[i] + 1;
+			else
+				count[j] = count[j] + 1;
+	}
+	int i = 0, j = 0, k = 0;
+	while (i < size) {
+		elem1 = arr[i]; j = count[i];
+		while (i != j) {
+			elem2 = arr[j];
+			arr[j] = elem1;
+			elem1 = elem2;
+			k = count[j];
+			count[j] = j;
+			j = k;
+		}
+		arr[i] = elem1;
+		count[i] = i - 1;
+		++i;
+	}
+	delete[] count;
+}
+ void sort( int *array, int *out, int *count, int size, int u, int v )
+    {
+        int i, j;
+ 
+        for( i = 0; i < size; i++ )
+            count[i] = 0;
+ 
+        for( i = 0; i < size; i++ )
+            count[array[i] - u]++;
+ 
+        for( i = 1; i <= v - u; i++ )
+            count[i] += count[i-1];
+ 
+        for( i = size - 1; i >= 0; i-- )
+        {
+            j = count[array[i]];
+            out[j] = array[i];
+            count[array[i]]--;
+        }
+    }
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+
+template <class type>
+void shaker_sort(std::vector<type>& vec)
+{
+    bool is_sorted;
+    int right = vec.size() - 1;
+    int left = 1;
+    int last_swap_index;
+
+    auto swap_if = [&vec, &is_sorted, &last_swap_index](int i)
+    {
+        if (vec[i - 1] > vec[i])
+        {
+            std::swap(vec[i - 1], vec[i]);
+            is_sorted = false;
+            last_swap_index = i;
+        }
+    };
+
+    do {
+        is_sorted = true;
+
+        for (int i = left; i <= right; ++i)
+            swap_if(i);
+        right = last_swap_index - 1;
+
+        for (int i = right; i >= left; --i) 
+            swap_if(i);
+        left = last_swap_index + 1;
+
+    } while (is_sorted == false);
+}
+
+template <class type>
+void init(std::vector<type>& vec, const char* filename)
+{
+    std::ifstream in(filename);
+    int num;
+    while (in.good())
+    {
+        in >> num;
+        vec.push_back(num);
+    }
+       
+}
+
+template <class type>
+void print(std::vector<type>& vec)
+{
+    int size = vec.size();
+    for (int i = 0; i < size; ++i)
+        std::cout << vec[i] << " ";
+}
+
+void main()
+{
+    std::vector<int> vec;
+    init(vec, "array.txt");
+    shaker_sort(vec);
+    print(vec);
+}
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+#include <functional>
+
+using std::cin;
+using std::cout;
+
+using TInfo = int;
+
+void reverse(TInfo* arr, int begin, int end)
+{
+	while (begin < end)
+	{
+		std::swap(arr[begin], arr[end]);
+		++begin;
+		--end;
+	}
+}
+
+void print(TInfo* arr, int n)
+{
+	for (int i = 0; i < n; i++)
+		cout << arr[i] << ' ';
+	cout << "\n\n";
+}
+
+TInfo* bucketSort(TInfo* arr, int n, int minVal, int maxVal, bool ascending = true)
+{
+	std::function<bool(TInfo, TInfo)> comp = [ascending](TInfo n, TInfo m) {return ascending ? n < m : n > m; };
+	std::vector<TInfo>* buckets = new std::vector<TInfo>[n];
+
+	for (int i = 0; i < n; ++i)
+	{
+		int bucketIndex = (arr[i] - minVal) * (n - 1) / (maxVal - minVal);
+		buckets[bucketIndex].push_back(arr[i]);
+	}
+
+	for (int i = 0; i < n; ++i)
+		if (buckets[i].size() > 1)
+			std::sort(buckets[i].begin(), buckets[i].end(), comp);
+
+	TInfo* result = new TInfo[n];
+	int index = 0;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < buckets[i].size(); j++)
+			result[index++] = buckets[i][j];
+	}
+
+	//for (int i = 0; i < n; i++)
+	//{
+	//	cout << '[' << i << ']' << ' ';
+	//	for (int j = 0; j < buckets[i].size(); j++)
+	//		cout << buckets[i][j] << ' ';
+	//	cout << '\n';
+	//}
+
+	if (!ascending)
+		reverse(result, 0, n - 1);
+
+	delete[] buckets;
+	return result;
+}
+
+	cout << '\n';
+int main() {
+	cout << "Enter array size\n";
+	int size;
+	cin >> size;
+	TInfo* arr = new TInfo[size];
+	TInfo min, max;
+	cout << "Enter min value\n";
+	cin >> min;
+	cout << "Enter max value\n";
+	cin >> max;
+	srand(time(NULL));
+
+	for (int i = 0; i < size; i++)
+		arr[i] = min + rand() % (max - min + 1);
+	system("cls");
+
+	cout << "Before sort: ";
+	print(arr, size);
+	TInfo* result = bucketSort(arr, size, min, max, true);
+	cout << "After sort: ";
+	print(result, size);
+	cin.get();
+	delete[] result;
+}
+
+void bubble_sort(int * array, int n)
+{
+    for (int i = 0; i < n; ++i)
+        for (int j = n - 1; j > i; --j)
+            if (array[j-1] > array[j])
+                std::swap(array[j-1], array[j]);
+}
+void barrier_sort(int* a, int n)
+{
+    int bound, t;
+    bound = n;
+    do {
+        t = 0;
+        for (int i = 0; i < bound - 1; i++) 
+            if (a[i] > a[i + 1]) {
+	            std::swap(a[i], a[i + 1]);
+	            t = i;
+	        }
+	    bound = t + 1;
+	} while (t != 0);
+}
+void radixSort(std::vector<int>& arr)
+{
+int maxDigits = 0;
+for (int i = 0; i < arr.size(); i++) {
+int digits = 0;
+int n = arr[i];
+while (n > 0) {
+digits++;
+n /= 10;
+}
+if (digits > maxDigits) {
+maxDigits = digits;
+}
+}
+int powerlvl = 1; 
+for (int digit = 1; digit <= maxDigits; digit++) {
+std::vector<std::vector<int>> buckets(10);
+for (int i = 0; i < arr.size(); i++) {
+int bucketIndex = (arr[i] / powerlvl) % 10;
+buckets[bucketIndex].push_back(arr[i]);
+}
+powerlvl *= 10;
+int index = 0;
+for (int i = 0; i < 10; i++) {
+for (int j = 0; j < buckets[i].size(); j++) {
+arr[index++] = buckets[i][j];
+}
+}
+}
+}
+void quickSort(int *array, int size) {
+    int i = 0;
+    int j = size - 1;
+
+    int mid = array[size / 2];
+
+    do {
+        while(array[i] < mid) 
+            ++i;
+        
+        while(array[j] > mid) 
+            --j;
+        
+
+        if (i <= j) {
+            std::swap(array[i],array[j]);
+            ++i;
+            --j;
+        }
+        
+    } while (i <= j);
+
+    if(j > 0) 
+        quickSort(array, j + 1);
+        
+    if (i < size) 
+        quickSort(array+i, size - i);
+}
+void quickSort(int* arr, int left, int right)
+{
+   if (left < right) {
+       int i = left, j = right;
+       while (i < j)
+       {
+           while (i < j && arr[j] >= arr[i])
+               --j;
+           std::swap(arr[i], arr[j]);
+
+           while (i < j && arr[j] >= arr[i])
+               ++i;
+           std::swap(arr[i], arr[j]);
+       }
+       quickSort(arr, left, i - 1);
+       quickSort(arr, j + 1, right);
+   }
+}
+#include <iostream>
+#include <windows.h>
+
+bool get_digit(int num, int digit);
+void bitwise_sort(int* arr, int l, int r, int digit = 0);
+
+int main()
+{
+	SetConsoleOutputCP(1251);
+	const int size = 10;
+	int arr[size]{ 73, 50, 29, 77, 11, 71, 77, 88, 69, 5 };
+	bitwise_sort(arr, 0, 9);
+	for (int i = 0; i < size; i++)
+		std::cout << arr[i] << ' ';
+	std::cout << '\n';
+	std::cin.get();
+}
+
+bool get_digit(int num, int digit)
+{
+	unsigned int bit_var = 1<<31;
+	return num & (bit_var >> digit);
+}
+
+void bitwise_sort(int* arr, int l, int r, int digit)
+{
+	int i = l, j = r;
+	if (l <= r && digit < sizeof(int) * 8)
+	{
+		while (j != i)
+		{
+			while (!get_digit(arr[i], digit) && (i < j)) i++;
+			while (get_digit(arr[j], digit) && (j > i)) j--;
+			std::swap(arr[i], arr[j]);
+		}
+		if (!get_digit(arr[r], digit)) 
+			j++;
+		bitwise_sort(arr, l, j - 1, digit + 1);
+		bitwise_sort(arr, j, r, digit + 1);
+	}
+}
+void InsertionSort(int * arr, int n) {
+    for(int i=1;i<n;i++)     
+        for(int j=i;j>0 && arr[j-1]>arr[j];j--) 
+            swap(arr[j-1],arr[j]);
+}
+#include <iostream>
+using std::cout;
+using std::cin;
+
+int binarySearch(int a[], int item, int low, int high)
+{
+	while (low <= high) {
+		int mid = low + (high - low) / 2;
+		if (item == a[mid])
+			return mid +1;
+		else if (item > a[mid])
+			low = mid + 1;
+		else
+			high = mid - 1;
+	}
+	return low;
+}
+
+void insertionSort(int a[], int n)
+{
+	int i, loc, j, selected;
+
+	for (i = 1; i < n; ++i) {
+		j = i - 1;
+		selected = a[i];
+		loc = binarySearch(a, selected, 0, j);
+		while (j >= loc) {
+			a[j + 1] = a[j];
+			j--;
+		}
+		a[j + 1] = selected;
+	}
+}
+
+int main()
+{
+	/*cout << "N: ";
+	int n; cin >> n;
+	int* a = new int[n];
+	for (int i = 0; i < n; ++i)
+		cin >> a[i];*/
+
+	int a[]	= { 37, 23, 0, 17, 12, 72, 31, 46, 100, 88, 54 };
+	int n = sizeof(a) / sizeof(a[0]);
+
+	cout << "Unsorted array: \n";
+	for (int i = 0; i < n; ++i)
+		cout << " " << a[i];
+	cout << '\n';
+
+	insertionSort(a, n);
+
+	cout << "Sorted array: \n";
+	for (int i = 0; i < n; ++i)
+		cout << " " << a[i];
+	cout << '\n';
+
+	//cin.ignore();
+	cin.get();
+	return 0;
+}
+#include <iostream>
+
+void printArray(int arr[], int n);
+void shellSort(int arr[], int n) {
+	for (int gap = n / 2; gap > 0; gap /= 2) 
+	{
+		for (int i = gap; i < n; i++) {
+			int temp = arr[i];
+			int j= i;
+			for (j; j >= gap && arr[j - gap] > temp; j -= gap)//ищем место элементу temp в подмассиве 
+				arr[j] = arr[j - gap];
+			arr[j] = temp;
+		}
+	}
+}
+
+void printArray(int arr[], int n) {
+	for (int i = 0; i < n; i++)
+		std::cout << arr[i] << " ";
+	std::cout << "\n\n";
+}
+
+int main() {
+	do
+	{
+		int n;
+		std::cout << "Enter size of array"<<'\n';
+		std::cin >> n;
+		int *arr = new int[n];
+		std::cout << "Enter elements of array" << '\n';
+		for (int i = 0; i < n; i++)
+			std::cin >> arr[i];
+		std::cout << "Array sorting:" << '\n';
+		shellSort(arr, n);
+		bool exit = false;
+		char c;
+		std::cout << "Exit? y/n";
+		std::cin >> c;
+		if (c == 'y' || c == 'Y') exit = false;
+	} while (!exit);
+
+}
+#include <list>
+using std::list;
+#include <iostream>
+#include <fstream>
+using std::ofstream; using std::ifstream;
+#include <functional>
+using std::function;
+#include <iterator>
+void print(list<int>const& list, std::ostream& out = std::cout);
+
+list<int>InsertionInListSort(std::string filename, int n, function<int(int)>rule = [](int n) {return n / 10; })
+{
+	ifstream file(filename);
+
+	list<int> *range = new list<int>[n];
+	
+	int elem;
+
+	auto emplace_by_order = [](list<int>& l, int elem, function<bool(int, int)>comp = [](int n, int m)->bool {return n < m; })
+	{	
+			list<int>::iterator p = l.begin();
+
+			while (p != l.end() &&
+				comp(*p, elem))
+			++p;
+
+			l.emplace(p, elem);
+
+	};
+
+	while (!file.eof())
+	{
+		file>>elem;
+		emplace_by_order(range[rule(elem)], elem);
+	}
+
+	list<int>result;
+	for (int i = 0; i<n; ++i)
+	{
+		
+		std::cout << '[' << i << ']'; print(range[i]);
+
+		if (range[i].size() > 0)
+			result.insert(result.end(), range[i].begin(), range[i].end());
+	}
+
+	return result;
+};
+
+void print(list<int>const&list, std::ostream& out)
+{
+	for (int i : list)
+		out << i << ' ';
+	out << std::endl;
+};
+int main()
+{
+	bool IsExit(false);
+	while (!IsExit)
+	{
+		std::cout << "Input from: ";
+		std::string filename;
+		std::cin >> filename;
+
+		list<int> p = InsertionInListSort(filename,10);
+
+		ofstream ofile("out.txt");
+		std::cout << "Result: \n";
+		print(p);
+		std::cout << "Exit? y/n:";
+		char ans; std::cin >> ans;
+		IsExit = ans == 'Y' || ans == 'y' || ans == 'Н' || ans == 'н';
+	}
+}
+void selection_sort(int * arr, int n) {
+  for (int i = 0; i < n - 1; i++) {
+    int min_index = i;
+    for (int j = i + 1; j < n; j++) 
+      if (arr[j] < arr[min_index]) 
+        min_index = j;
+    std::swap(arr[i], arr[min_index]);
+  }
+}
+
+#include <algorithm>
+
+void selection_sort2(int * arr, int n) {
+  for (int i = 0; i < n - 1; i++) {
+    std::swap(arr[i], *std::min_element(arr + i, arr + n));
+  }
+}
+#include <iostream>
+#include <functional>
+#include <Windows.h>
+
+
+template <class T>
+void print(const char* mes, T* arr, int n) {
+	std::cout << '\n' << mes << '\n';
+	for (int i = 0; i < n; ++i)
+		std::cout << arr[i] << ' ';
+}
+
+template <class T>
+struct node {
+	int ind; 
+	T info; 
+
+	node(T info = 0, int ind = -1) : info(info), ind(ind) {}
+	bool is_elem() const {
+		return ind > -1;
+	}
+
+	node& operator=(const node& n) {
+		if (this != &n) {
+			ind = n.ind;
+			info = n.info;
+		}
+		return *this;
+	}
+
+	friend std::ostream& operator<<(std::ostream& out, const node& nd) {
+		if (nd.ind > -1) {
+			out << nd.info;
+			out << '[' << nd.ind << "] ";
+		}
+		else
+			out << "NULL ";
+		return out;
+	}
+};
+
+template <class T>
+void print_tourn(const char* mes, T* arr, int lim) {
+	std::cout << '\n' << mes << '\n';
+	int i = 0;
+	for (int k = 0; k <= lim; ++k) {
+		int count = int(pow(2, k));
+		while (count--)
+			std::cout << arr[i++] << ' ';
+		std::cout << '\n';
+	}
+}
+
+
+template <class T, class Predicat>
+void tournament_sort(T* data, int n, Predicat cmp) {
+	int k = int(ceil(log2(n))), down = int(pow(2, k)), size = 2 * down - 1;
+	node<T>* arr = new node<T>[size];
+	int itree = size / 2, j = 0;
+	while (j < n) {
+		arr[itree] = node <T>(data[j], itree);
+		++itree; ++j;
+	}
+	itree = size / 2;
+	while (itree) {
+		int j = itree;
+		while (j < size && arr[j].is_elem() && arr[j + 1].is_elem()) {
+			arr[(j - 1) / 2] = cmp(arr[j].info, arr[j + 1].info) ? (arr[j]) : (arr[j + 1]);
+			j += 2;
+		}
+		if (j < size && arr[j].is_elem())
+			arr[(j - 1) / 2] = arr[j];
+		itree /= 2;
+	}
+
+
+//новое сравнение всех пар, через которые проходил "всплывший"
+//ex - индекс последнего из "всплывших"
+//lost - индекс элемента, который сравнивался в паре с ex
+//up - индекс результата сравнения
+	auto re_tree = [cmp, k](node<T>* arr, int ex) {
+		int lost = ex + ((ex % 2) ? 1 : -1);
+		arr[ex].ind = -1;
+		while (ex > 0) {
+			//print_tourn("in re_tree:", arr, k); //контрольная печать
+			int up = (ex - 1) / 2;
+			if (arr[lost].is_elem() && arr[ex].is_elem())
+				arr[up] = cmp(arr[lost].info, arr[ex].info) ? arr[lost] : arr[ex];
+			else
+				arr[up] = arr[lost].is_elem() ? arr[lost] : arr[ex];
+			ex = up;
+			lost = ex + ((ex % 2) ? 1 : -1);
+		}
+	};
+
+	//повторение процедуры "всплытия" пока не останется один нефиктивный элемент
+	for (int i = 0; i < n - 1; ++i) {
+		data[i] = arr[0].info;
+		re_tree(arr, arr[0].ind);
+	//!	print_tourn("\nafter re_tree:", arr, k);  //контрольная печать
+	}
+	data[n - 1] = arr[0].info;
+
+	delete[] arr;
+}
+
+int main() {
+	srand(GetTickCount64());
+	int n; std::cout << "\n N = "; std::cin >> n;
+
+	/*INT		*/
+	int* data = new int[n];
+	for (int i = 0; i < n; ++i)
+		data[i] = rand() % 74 - 49 % 5;
+
+	print("data:", data, n);
+	tournament_sort(data, n, [](int a, int b) { return a < b; });
+	print("sorted data:", data, n);
+
+	delete[] data;
+
+	std::cin.ignore().get();
+}
+void in_heap(int* mas, int n, int _root){
+int root = _root;
+int l = 2 * _root + 1;
+int r = 2 * _root + 2;
+if (l < n && mas[l] > mas[root])
+root = l;
+if (r < n && mas[r] > mas[root])
+root = r;
+if (root != _root){
+swap(mas[_root], mas[root]);
+in_heap(mas, n, root);
+}
+}
+
+void HeapSort(int* mas, int n){
+for (int i = n / 2 - 1; i >= 0; i--)
+in_heap(mas, n, i);
+for (int i = n - 1; i >= 0; i--){
+swap(mas[0], mas[i]);
+in_heap(mas, i, 0);
+}
+}

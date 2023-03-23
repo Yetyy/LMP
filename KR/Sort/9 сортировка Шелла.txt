@@ -1,0 +1,42 @@
+#include <iostream>
+
+void printArray(int arr[], int n);
+void shellSort(int arr[], int n) {
+	for (int gap = n / 2; gap > 0; gap /= 2) 
+	{
+		for (int i = gap; i < n; i++) {
+			int temp = arr[i];
+			int j= i;
+			for (j; j >= gap && arr[j - gap] > temp; j -= gap)//ищем место элементу temp в подмассиве 
+				arr[j] = arr[j - gap];
+			arr[j] = temp;
+		}
+	}
+}
+
+void printArray(int arr[], int n) {
+	for (int i = 0; i < n; i++)
+		std::cout << arr[i] << " ";
+	std::cout << "\n\n";
+}
+
+int main() {
+	do
+	{
+		int n;
+		std::cout << "Enter size of array"<<'\n';
+		std::cin >> n;
+		int *arr = new int[n];
+		std::cout << "Enter elements of array" << '\n';
+		for (int i = 0; i < n; i++)
+			std::cin >> arr[i];
+		std::cout << "Array sorting:" << '\n';
+		shellSort(arr, n);
+		bool exit = false;
+		char c;
+		std::cout << "Exit? y/n";
+		std::cin >> c;
+		if (c == 'y' || c == 'Y') exit = false;
+	} while (!exit);
+
+}

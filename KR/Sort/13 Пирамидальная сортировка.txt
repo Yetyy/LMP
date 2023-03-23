@@ -1,0 +1,22 @@
+void in_heap(int* mas, int n, int _root){
+int root = _root;
+int l = 2 * _root + 1;
+int r = 2 * _root + 2;
+if (l < n && mas[l] > mas[root])
+root = l;
+if (r < n && mas[r] > mas[root])
+root = r;
+if (root != _root){
+swap(mas[_root], mas[root]);
+in_heap(mas, n, root);
+}
+}
+
+void HeapSort(int* mas, int n){
+for (int i = n / 2 - 1; i >= 0; i--)
+in_heap(mas, n, i);
+for (int i = n - 1; i >= 0; i--){
+swap(mas[0], mas[i]);
+in_heap(mas, i, 0);
+}
+}

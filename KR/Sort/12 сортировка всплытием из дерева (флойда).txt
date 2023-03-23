@@ -1,0 +1,123 @@
+#include <iostream>
+#include <functional>
+#include <Windows.h>
+
+
+template <class T>
+void print(const char* mes, T* arr, int n) {
+	std::cout << '\n' << mes << '\n';
+	for (int i = 0; i < n; ++i)
+		std::cout << arr[i] << ' ';
+}
+
+template <class T>
+struct node {
+	int ind; 
+	T info; 
+
+	node(T info = 0, int ind = -1) : info(info), ind(ind) {}
+	bool is_elem() const {
+		return ind > -1;
+	}
+
+	node& operator=(const node& n) {
+		if (this != &n) {
+			ind = n.ind;
+			info = n.info;
+		}
+		return *this;
+	}
+
+	friend std::ostream& operator<<(std::ostream& out, const node& nd) {
+		if (nd.ind > -1) {
+			out << nd.info;
+			out << '[' << nd.ind << "] ";
+		}
+		else
+			out << "NULL ";
+		return out;
+	}
+};
+
+template <class T>
+void print_tourn(const char* mes, T* arr, int lim) {
+	std::cout << '\n' << mes << '\n';
+	int i = 0;
+	for (int k = 0; k <= lim; ++k) {
+		int count = int(pow(2, k));
+		while (count--)
+			std::cout << arr[i++] << ' ';
+		std::cout << '\n';
+	}
+}
+
+
+template <class T, class Predicat>
+void tournament_sort(T* data, int n, Predicat cmp) {
+	int k = int(ceil(log2(n))), down = int(pow(2, k)), size = 2 * down - 1;
+	node<T>* arr = new node<T>[size];
+	int itree = size / 2, j = 0;
+	while (j < n) {
+		arr[itree] = node <T>(data[j], itree);
+		++itree; ++j;
+	}
+	itree = size / 2;
+	while (itree) {
+		int j = itree;
+		while (j < size && arr[j].is_elem() && arr[j + 1].is_elem()) {
+			arr[(j - 1) / 2] = cmp(arr[j].info, arr[j + 1].info) ? (arr[j]) : (arr[j + 1]);
+			j += 2;
+		}
+		if (j < size && arr[j].is_elem())
+			arr[(j - 1) / 2] = arr[j];
+		itree /= 2;
+	}
+
+
+//новое сравнение всех пар, через которые проходил "всплывший"
+//ex - индекс последнего из "всплывших"
+//lost - индекс элемента, который сравнивался в паре с ex
+//up - индекс результата сравнения
+	auto re_tree = [cmp, k](node<T>* arr, int ex) {
+		int lost = ex + ((ex % 2) ? 1 : -1);
+		arr[ex].ind = -1;
+		while (ex > 0) {
+			//print_tourn("in re_tree:", arr, k); //контрольная печать
+			int up = (ex - 1) / 2;
+			if (arr[lost].is_elem() && arr[ex].is_elem())
+				arr[up] = cmp(arr[lost].info, arr[ex].info) ? arr[lost] : arr[ex];
+			else
+				arr[up] = arr[lost].is_elem() ? arr[lost] : arr[ex];
+			ex = up;
+			lost = ex + ((ex % 2) ? 1 : -1);
+		}
+	};
+
+	//повторение процедуры "всплытия" пока не останется один нефиктивный элемент
+	for (int i = 0; i < n - 1; ++i) {
+		data[i] = arr[0].info;
+		re_tree(arr, arr[0].ind);
+	//!	print_tourn("\nafter re_tree:", arr, k);  //контрольная печать
+	}
+	data[n - 1] = arr[0].info;
+
+	delete[] arr;
+}
+
+int main() {
+	srand(GetTickCount64());
+	int n; std::cout << "\n N = "; std::cin >> n;
+
+	/*INT		*/
+	int* data = new int[n];
+	for (int i = 0; i < n; ++i)
+		data[i] = rand() % 74 - 49 % 5;
+
+	print("data:", data, n);
+	tournament_sort(data, n, [](int a, int b) { return a < b; });
+	print("sorted data:", data, n);
+
+	delete[] data;
+
+	std::cin.ignore().get();
+}

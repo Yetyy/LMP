@@ -1,0 +1,58 @@
+struct TapeCell {
+	int value;
+	bool eosa; // end of sub array
+	TapeCell(int value, bool eosa) : value(value), eosa(eosa) {}
+};
+
+void natural_merge_sort(std::vector<int>& vector)
+{
+	std::vector<TapeCell> sub[2];
+	size_t n = vector.size();
+	size_t whichSub = 0;
+	bool isSorted = false;
+
+	while (!isSorted) {
+		sub[0].clear();
+		sub[1].clear();
+
+		for (int i = 0; i < n - 1; ++i) {
+			if (vector[i] <= vector[i + 1])
+				sub[whichSub].push_back(TapeCell(vector[i], 0));
+			else {
+				sub[whichSub].push_back(TapeCell(vector[i], 1));
+				whichSub = ++whichSub % 2;
+			}
+		}
+		sub[whichSub].push_back(TapeCell(vector[n - 1], 1));
+
+		isSorted = sub[0].size() == 0 || sub[1].size() == 0;
+		if (!isSorted) {
+			natural_merge(vector, sub[0], sub[1]);
+		}
+	}
+}
+
+void natural_merge(std::vector<int>& vector, std::vector<TapeCell>& a, std::vector<TapeCell>& b)
+{
+	size_t aLen = a.size(), bLen = b.size();
+	size_t i = 0, j = 0, k = 0;
+	do {
+		if (a[i].eosa && b[j].eosa) {
+			vector[k++] = a[i++].value;
+			vector[k++] = b[j++].value;
+			if (vector[k - 1] < vector[k - 2])
+				std::swap(vector[k - 1], vector[k - 2]);
+		}
+		else {
+			if (a[i].value <= b[j].value)
+				vector[k++] = a[i++].value;
+			else
+				vector[k++] = b[j++].value;
+		}
+
+	} while (i < aLen && j < bLen);
+	while (i < aLen)
+		vector[k++] = a[i++].value;
+	while (j < bLen)
+		vector[k++] = b[j++].value;
+}

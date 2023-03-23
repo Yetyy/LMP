@@ -1,0 +1,78 @@
+#include<iostream>
+#include<Windows.h>
+
+
+void Print(int* arr, int n) 
+{ 
+	for (int i = 0; i < n; i++) 
+		std::cout << arr[i] << ' '; 
+	std::cout << std::endl; 
+}
+
+
+// Слияние arr[left..middle] с arr[middle+1..right] 
+void Merge(int* arr, int* tmp, int left, int middle, int right)
+{ 
+
+	for (int k = left; k <= right; k++) 
+		tmp[k] = arr[k];  
+
+
+	int i = left;
+
+	int j = middle + 1;
+	int k = left;
+	while (k <= right)
+		if (i > middle) 
+			arr[k++] = tmp[j++];
+		else if (j > right) 
+			arr[k++] = tmp[i++];
+		else if (tmp[i] < tmp[j])  
+			arr[k++] = tmp[i++];
+		else 
+			arr[k++] = tmp[j++];
+}
+
+
+void MergeSortUp(int* arr, int size)
+{
+	int* tmp = new int[size];
+	int length = 1;
+	int left;
+	while (length < size)
+	{
+		left = 0;
+		while (left < size - length)
+		{
+			Merge
+			(
+				arr, 
+				tmp, 
+				left, 
+				left + length - 1, 
+				min
+				(
+					left + 2 * length - 1, 
+					size - 1 
+				)
+			);
+			left += 2 * length;
+		}
+		length *= 2;
+	}
+	delete[] tmp;
+}
+		
+int main()
+{
+	const int n = 10;
+	int arr[n]; 
+	srand(GetTickCount64());
+	for (int i = 0; i < n; i++) 
+		arr[i] = rand() % 100; 
+	Print(arr, n); 
+	MergeSortUp(arr, n); 
+	Print(arr, n);
+	std::cin.get();
+	return 0;
+}

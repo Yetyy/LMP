@@ -1,0 +1,14 @@
+void barrier_sort(int* a, int n)
+{
+    int bound, t;
+    bound = n;
+    do {
+        t = 0;
+        for (int i = 0; i < bound - 1; i++) 
+            if (a[i] > a[i + 1]) {
+	            std::swap(a[i], a[i + 1]);
+	            t = i;
+	        }
+	    bound = t + 1;
+	} while (t != 0);
+}

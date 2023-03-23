@@ -1,0 +1,91 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+#include <functional>
+
+using std::cin;
+using std::cout;
+
+using TInfo = int;
+
+void reverse(TInfo* arr, int begin, int end)
+{
+	while (begin < end)
+	{
+		std::swap(arr[begin], arr[end]);
+		++begin;
+		--end;
+	}
+}
+
+void print(TInfo* arr, int n)
+{
+	for (int i = 0; i < n; i++)
+		cout << arr[i] << ' ';
+	cout << "\n\n";
+}
+
+TInfo* bucketSort(TInfo* arr, int n, int minVal, int maxVal, bool ascending = true)
+{
+	std::function<bool(TInfo, TInfo)> comp = [ascending](TInfo n, TInfo m) {return ascending ? n < m : n > m; };
+	std::vector<TInfo>* buckets = new std::vector<TInfo>[n];
+
+	for (int i = 0; i < n; ++i)
+	{
+		int bucketIndex = (arr[i] - minVal) * (n - 1) / (maxVal - minVal);
+		buckets[bucketIndex].push_back(arr[i]);
+	}
+
+	for (int i = 0; i < n; ++i)
+		if (buckets[i].size() > 1)
+			std::sort(buckets[i].begin(), buckets[i].end(), comp);
+
+	TInfo* result = new TInfo[n];
+	int index = 0;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < buckets[i].size(); j++)
+			result[index++] = buckets[i][j];
+	}
+
+	//for (int i = 0; i < n; i++)
+	//{
+	//	cout << '[' << i << ']' << ' ';
+	//	for (int j = 0; j < buckets[i].size(); j++)
+	//		cout << buckets[i][j] << ' ';
+	//	cout << '\n';
+	//}
+
+	if (!ascending)
+		reverse(result, 0, n - 1);
+
+	delete[] buckets;
+	return result;
+}
+
+	cout << '\n';
+int main() {
+	cout << "Enter array size\n";
+	int size;
+	cin >> size;
+	TInfo* arr = new TInfo[size];
+	TInfo min, max;
+	cout << "Enter min value\n";
+	cin >> min;
+	cout << "Enter max value\n";
+	cin >> max;
+	srand(time(NULL));
+
+	for (int i = 0; i < size; i++)
+		arr[i] = min + rand() % (max - min + 1);
+	system("cls");
+
+	cout << "Before sort: ";
+	print(arr, size);
+	TInfo* result = bucketSort(arr, size, min, max, true);
+	cout << "After sort: ";
+	print(result, size);
+	cin.get();
+	delete[] result;
+}

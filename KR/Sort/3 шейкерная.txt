@@ -1,0 +1,64 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+
+template <class type>
+void shaker_sort(std::vector<type>& vec)
+{
+    bool is_sorted;
+    int right = vec.size() - 1;
+    int left = 1;
+    int last_swap_index;
+
+    auto swap_if = [&vec, &is_sorted, &last_swap_index](int i)
+    {
+        if (vec[i - 1] > vec[i])
+        {
+            std::swap(vec[i - 1], vec[i]);
+            is_sorted = false;
+            last_swap_index = i;
+        }
+    };
+
+    do {
+        is_sorted = true;
+
+        for (int i = left; i <= right; ++i)
+            swap_if(i);
+        right = last_swap_index - 1;
+
+        for (int i = right; i >= left; --i) 
+            swap_if(i);
+        left = last_swap_index + 1;
+
+    } while (is_sorted == false);
+}
+
+template <class type>
+void init(std::vector<type>& vec, const char* filename)
+{
+    std::ifstream in(filename);
+    int num;
+    while (in.good())
+    {
+        in >> num;
+        vec.push_back(num);
+    }
+       
+}
+
+template <class type>
+void print(std::vector<type>& vec)
+{
+    int size = vec.size();
+    for (int i = 0; i < size; ++i)
+        std::cout << vec[i] << " ";
+}
+
+void main()
+{
+    std::vector<int> vec;
+    init(vec, "array.txt");
+    shaker_sort(vec);
+    print(vec);
+}

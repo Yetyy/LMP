@@ -1,0 +1,30 @@
+void radixSort(std::vector<int>& arr)
+{
+int maxDigits = 0;
+for (int i = 0; i < arr.size(); i++) {
+int digits = 0;
+int n = arr[i];
+while (n > 0) {
+digits++;
+n /= 10;
+}
+if (digits > maxDigits) {
+maxDigits = digits;
+}
+}
+int powerlvl = 1; 
+for (int digit = 1; digit <= maxDigits; digit++) {
+std::vector<std::vector<int>> buckets(10);
+for (int i = 0; i < arr.size(); i++) {
+int bucketIndex = (arr[i] / powerlvl) % 10;
+buckets[bucketIndex].push_back(arr[i]);
+}
+powerlvl *= 10;
+int index = 0;
+for (int i = 0; i < 10; i++) {
+for (int j = 0; j < buckets[i].size(); j++) {
+arr[index++] = buckets[i][j];
+}
+}
+}
+}

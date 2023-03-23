@@ -1,0 +1,29 @@
+void counting_sort(int* arr, int size)
+{
+	int* count = new int[size] {0};
+	int elem1, elem2;
+	for (int i = size - 1; i > 0; --i)
+	{
+		for (int j = 0; j < i; ++j)
+			if (arr[i] >= arr[j])
+				count[i] = count[i] + 1;
+			else
+				count[j] = count[j] + 1;
+	}
+	int i = 0, j = 0, k = 0;
+	while (i < size) {
+		elem1 = arr[i]; j = count[i];
+		while (i != j) {
+			elem2 = arr[j];
+			arr[j] = elem1;
+			elem1 = elem2;
+			k = count[j];
+			count[j] = j;
+			j = k;
+		}
+		arr[i] = elem1;
+		count[i] = i - 1;
+		++i;
+	}
+	delete[] count;
+}

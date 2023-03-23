@@ -1,0 +1,41 @@
+#include <iostream>
+#include <windows.h>
+
+bool get_digit(int num, int digit);
+void bitwise_sort(int* arr, int l, int r, int digit = 0);
+
+int main()
+{
+	SetConsoleOutputCP(1251);
+	const int size = 10;
+	int arr[size]{ 73, 50, 29, 77, 11, 71, 77, 88, 69, 5 };
+	bitwise_sort(arr, 0, 9);
+	for (int i = 0; i < size; i++)
+		std::cout << arr[i] << ' ';
+	std::cout << '\n';
+	std::cin.get();
+}
+
+bool get_digit(int num, int digit)
+{
+	unsigned int bit_var = 1<<31;
+	return num & (bit_var >> digit);
+}
+
+void bitwise_sort(int* arr, int l, int r, int digit)
+{
+	int i = l, j = r;
+	if (l <= r && digit < sizeof(int) * 8)
+	{
+		while (j != i)
+		{
+			while (!get_digit(arr[i], digit) && (i < j)) i++;
+			while (get_digit(arr[j], digit) && (j > i)) j--;
+			std::swap(arr[i], arr[j]);
+		}
+		if (!get_digit(arr[r], digit)) 
+			j++;
+		bitwise_sort(arr, l, j - 1, digit + 1);
+		bitwise_sort(arr, j, r, digit + 1);
+	}
+}

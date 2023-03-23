@@ -1,0 +1,62 @@
+#include <iostream>
+#include <Windows.h>
+
+void Merge(int*& a, int*& b, int n, int left, int middle, int right);
+void NaturalMergeSort(int*& a, int n);
+
+int main() {
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	srand(time(NULL));
+	const int n = 10;
+	int* a = new int[n];
+	std::cout << "Элементы массива до сортировки:\n";
+	for (int i = 0; i < n; ++i) {
+		a[i] = -20 + rand() % 41;
+		std::cout << a[i] << ' ';
+	}
+	std::cout << '\n';
+	std::cout << "Элементы массива после сортировки:\n";
+	NaturalMergeSort(a, n);
+	/*for (int i = 0; i < n; ++i)
+		std::cout << a[i] << ' ';*/
+	std::cin.get();
+}
+
+void Merge(int*& a, int n, int left, int middle, int right) {
+	int l = left, r = middle + 1;
+	int* b = new int[n];
+	for (int i = left; i <= right; ++i)
+		if (r > right || (l <= middle && a[l] <= a[r]))
+			b[i] = a[l++];
+		else if (l > middle || (r <= right && a[r] <= a[l]))
+			b[i] = a[r++];
+	for (int i = left; i <= right; ++i)
+		a[i] = b[i];
+	for (int i = left; i <= right; ++i)
+		std::cout << a[i] << ' ';
+	std::cout << '\n';
+}
+
+void NaturalMergeSort(int*& a, int n) {
+	int left = 0, right = n - 1;
+	bool sorted = false;
+	int l = left, r = right;
+	do {
+		sorted = true;
+		left = 0;
+		while (left < right) {
+			l = left;
+			while (l < right && a[l] <= a[l + 1])
+				++l;
+			r = l + 1;
+			while (r == right - 1 || r < right && a[r] <= a[r + 1])
+				++r;
+			if (r <= right) {
+				Merge(a, n, left, l, r);
+				sorted = false;
+			}
+			left = r + 1;
+		}
+	} while (!sorted);
+}
