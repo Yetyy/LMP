@@ -15,12 +15,16 @@ int main() {
 
     pair<pair<int, int>, pair<int, int>> answer;
     double min_dist = sqrt(pow(abs(points[1].first - points[0].first), 2) + pow(abs(points[1].second - points[0].second), 2));
-
-    for (int i = 1; i < n; i++) {
-        if (points[i].first - points[i - 1].first < min_dist) {
-            min_dist = sqrt(pow(abs(points[1].first - points[0].first), 2) + pow(abs(points[1].second - points[0].second), 2));
-            answer.first = points[i];
-            answer.second = points[i - 1];
+    double dist;
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++)
+        {
+            dist = sqrt(pow(abs(points[i].first - points[j].first), 2) + pow(abs(points[i].second - points[j].second), 2));
+            if (dist < min_dist) {
+                min_dist = dist;
+                answer.first = points[i];
+                answer.second = points[j];
+            }
         }
     }
 
