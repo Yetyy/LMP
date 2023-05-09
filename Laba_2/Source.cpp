@@ -17,20 +17,13 @@ bool dfs(int cur_vertex, int start_vertex, int max_len) {
     bool result = false;
     path.push_back(cur_vertex);
 
-    if (path.size() == n) { // все вершины посещены
+    if (path.size() == n) { 
         if (dist[cur_vertex][start_vertex] > 0 && path_len + dist[cur_vertex][start_vertex] <= max_len) {
-            // замкнутый путь найден
             path.push_back(start_vertex);
             result = true;
         }
-        else {
-            // путь не замкнутый, продолжаем поиск
-            path.pop_back();
-            visited[cur_vertex] = false;
-            
-        }
+    
     }
-   //
    for (int i = 0; i <= n; i++) {
         if (i != cur_vertex && !visited[i] && dist[cur_vertex][i] > 0 && path_len + dist[cur_vertex][i] <= max_len) {
             path_len += dist[cur_vertex][i];
@@ -47,20 +40,7 @@ bool dfs(int cur_vertex, int start_vertex, int max_len) {
    }
     return result;
 }
-//list<int> find_closed_path(int max_len) {
-//    path.clear();
-//    path_len = 0;
-//    for (int i = 0; i < n; i++) {
-//        // начинаем с каждой вершины
-//        for (int i = 0; i < n + 1; i++)
-//            visited[i] = false;
-//        path_len = 0;
-//        if (dfs(i, i, max_len)) {
-//            return path;
-//        }
-//    }
-//    return list<int>();
-//}
+
 
 list<int> find_closed_path(int max_len) {
     path.clear();
@@ -68,7 +48,6 @@ list<int> find_closed_path(int max_len) {
     bool found = false;
     int i = 0;
     while (!found && i < n) {
-        // начинаем с каждой вершины
         for (int j = 0; j < n + 1; j++)
             visited[j] = false;
         path_len = 0;
