@@ -1,0 +1,70 @@
+#include <set>
+#include <iostream>
+
+	std::set<int> union_with(const std::set<int>& first, const std::set<int>& second)
+	{
+		std::set<int> result(first);
+		for (int x : second) {
+			result.insert(x);
+		}
+		return result;
+	}
+
+	//std::set<int> intersect_with(const std::set<int>& first,const std::set<int>& second)
+	//{
+	//	std::set<int> result;
+	//	for (int x : first) {
+	//		std::set<int>::iterator test = second.find(x);
+	//		std::set<int>::iterator test2 = result.find(x);
+	//		if ((second.find(x)!= second.end())&&(result.find(x)== result.end())) {
+	//			result.insert(x);
+	//		}
+	//	}
+	//	return result;
+	//}
+	std::set<int> intersect_with(const std::set<int>& first, const std::set<int>& second)
+	{
+		std::set<int> result;
+
+		for (int x : first) {
+			if (second.find(x) != second.end()) {
+				result.insert(x);
+			}
+		}
+		return result;
+	}
+	std::set<int> difference_with(const std::set<int>& first, const std::set<int>& second)
+	{
+		std::set<int> result(first);
+		for (int x : second) {
+			result.erase(x);
+		}
+		return result;
+	}
+
+
+	int main() 
+	{
+		std::set <int> s1 = {1, 2 , 3 , 5};
+		std::set <int> s2 = {4, 2 ,1};
+		//std::set <int> s = union_with(s1, s2);
+		std::set <int> s = intersect_with(s1, s2);
+		//std::set <int> s = difference_with(s1, s2);
+		for (std::set<int>::iterator it = s.begin(); it != s.end(); ++it)
+		{
+			std::cout << *it << ' ';
+		}
+		std::cin.get();
+	}
+	
+
+	/*std::set<int> intersect_with(const std::set<int>& first, const std::set<int>& second)
+	{
+		std::set<int> result;
+		for (int x : first) {
+			if (second.find(x) != result.end()) {
+				result.insert(x);
+			}
+		}
+		return result;
+	}*/

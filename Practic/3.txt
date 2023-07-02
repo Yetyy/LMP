@@ -1,0 +1,14 @@
+#include <iostream>
+#include <map>
+#include <string>
+
+template<typename ForwardIt, typename UnaryPredicate>
+ForwardIt remove_if(ForwardIt first, ForwardIt last, UnaryPredicate p) {
+	ForwardIt result = first;
+	for (ForwardIt it = first; it != last; ++it) {
+		if (!p(*it)) {
+			*result++ = std::move(*it);
+		}
+	}
+	return result;
+}

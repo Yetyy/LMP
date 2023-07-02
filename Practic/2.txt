@@ -1,0 +1,31 @@
+#include <iostream>
+#include <map>
+#include <string>
+
+int main() {
+std::multimap<std::string, int> freq_map;
+
+// Заполняем словарь данными
+std::string word;
+bool flag = false;
+while (!flag) {
+std::cin » word;
+if (word == "N")
+flag = true;
+else
+if (freq_map.find(word) != freq_map.end()) {
+
+freq_map[word]++;
+}
+else {
+freq_map[word] = 1;
+}
+}
+
+// Выводим результаты
+for (const auto& entry : freq_map) {
+std::cout « entry.first « ": " « entry.second « std::endl;
+}
+
+return 0;
+}
